@@ -7,7 +7,7 @@ let tableData = data;
 let tbody = d3.select("tbody");
 
 //function to loop through the data and log it
-function t_update() { tableData.forEach(function (ufoSighting) {
+function t_update(sightings) { sightings.forEach(function (ufoSighting) {
     console.log(ufoSighting);
 
     //add a table row for each sighting that just got logged
@@ -24,40 +24,46 @@ function t_update() { tableData.forEach(function (ufoSighting) {
 });
 }
 
-t_update()
+//call t_update to initialize the table
 
-console.log(typeof t_update)
+t_update(tableData)
 
 // apply a filter to the date and tie it to an event listener
 
-//let btn = d3.select("#filter-btn")
+let btn = d3.select("button");
 
-//let input_date = d3.select(".form-control")
+let input = d3.select(".form-control");
 
-//let f_data = (function dateFilter(input_date){
-//    return data.datetime < input_date; 
-    
-//});
-
-//console.log(typeof f_data)
-
-//console.log(typeof data)
-
-//btn.on("click", f_data.forEach(function (ufoSighting){
-//    console.log(ufoSighting);
-
-    //add a table row for each sighting that just got logged
-//    let row = tbody.append("tr");
-
-    //log the key value pairs and append the values to td elements in the table
-//    Object.entries(ufoSighting).forEach(function([key, value]){
-//        console.log(key, value);
-
-//        let cell = row.append("td");
-//        cell.text(value)
-            
-//    });
-
-//}));
+//Write a function to clear table
+function clear_table(){
+     d3.select('tbody').remove();
+     
+}
 
 
+input.on("change", function(){
+    let input_date = d3.event.target.value;
+
+    //update table on the click of the button    
+    btn.on("click", function(){
+        
+        //filter condition
+        function user_date(tableData){
+            return(tableData.datetime === input_date)
+        }
+
+        tableDataFilt = tableData.filter(user_date);
+
+        console.log(tableDataFilt)
+
+        //clear the table
+        d3.select('tbody')
+            .selectAll('tr')
+            .selectAll('td')
+            .remove();
+
+        //Restore the table with filtered values
+        t_update(tableDataFilt)  
+   
+    });
+});
